@@ -6,12 +6,12 @@
   "license": "MIT",
   "main": "lib/index.js",
   "dependencies": {
-    "debug": "^3.2.6",
+    "debug": "^4.1.1",
     "markdown-it": "^8.4.2",
     "minimatch": "^3.0.4"
   },
   "devDependencies": {
-    "mocha": "5.x",
+    "mocha": "6.x",
     "metalsmith": "2.x",
     "assert-dir-equal": "1.x",
     "markdown-it-abbr": "^1.0.4"
