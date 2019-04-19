@@ -7,6 +7,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "debug": "^4.1.1",
+    "lodash": "^4.17.11",
     "markdown-it": "^8.4.2",
     "minimatch": "^3.0.4"
   },
