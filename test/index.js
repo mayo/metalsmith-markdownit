@@ -174,14 +174,14 @@ describe('metalsmith-markdown', function(){
       .use(markdown({
         plugin: {
           pattern: '**/*.html',
-          fields: ['contents', 'excerpt.sub'],
+          fields: ['contents', 'excerpt.subfield'],
           extension: 'htm'
         }
       }))
       .use(function(files, metalsmith, done){
         var f = files['index.htm'];
         // concat the excerpt into the main content
-        f.contents = f.contents.toString() + '\n' + f.excerpt.sub.toString()
+        f.contents = f.contents.toString() + '\n' + f.excerpt.subfield.toString()
         done()
       })
       .build(function(err){
