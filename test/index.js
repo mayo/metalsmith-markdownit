@@ -191,4 +191,26 @@ describe('metalsmith-markdown', function(){
       });
   });
 
+  it('should accept plugin options for multiple subfields', function(done){
+    Metalsmith('test/fixtures/plugin-options-multisubfield')
+      .use(markdown({
+        plugin: {
+          pattern: '**/*.html',
+          fields: ['contents', 'subfield'],
+          extension: 'htm'
+        }
+      }))
+      .use(function(files, metalsmith, done){
+        var f = files['index.htm'];
+        // concat the excerpt into the main content
+        f.contents = f.contents.toString() + '\n' + f.excerpt[0].subfield.toString() + '\n' + f.excerpt[1].subfield.toString() + '\n' + f.main.submain.subfield.toString()
+        done()
+      })
+      .build(function(err){
+        if (err) return done(err);
+        equal('test/fixtures/plugin-options-multisubfield/expected', 'test/fixtures/plugin-options-multisubfield/build');
+        done();
+      });
+  });
+
 });
