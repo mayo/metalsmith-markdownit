@@ -10,7 +10,9 @@ describe('metalsmith-markdown', function(){
       .use(markdown())
       .build(function(err){
         if (err) return done(err);
-        equal('test/fixtures/basic/expected', 'test/fixtures/basic/build');
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/basic/build', 'test/fixtures/basic/expected');
+        });
         done();
       });
   });
@@ -20,7 +22,9 @@ describe('metalsmith-markdown', function(){
       .use(markdown('default'))
       .build(function(err){
         if (err) return done(err);
-        equal('test/fixtures/preset/expected', 'test/fixtures/preset/build');
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/preset/build', 'test/fixtures/preset/expected');
+        });
         done();
       });
   });
@@ -30,7 +34,9 @@ describe('metalsmith-markdown', function(){
       .use(markdown({ html: true }))
       .build(function(err){
         if (err) return done(err);
-        equal('test/fixtures/options/expected', 'test/fixtures/options/build');
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/options/build', 'test/fixtures/options/expected');
+        });
         done();
       });
   });
@@ -40,7 +46,9 @@ describe('metalsmith-markdown', function(){
       .use(markdown('default', { typographer: true }))
       .build(function(err){
         if (err) return done(err);
-        equal('test/fixtures/combo/expected', 'test/fixtures/combo/build');
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/combo/build', 'test/fixtures/combo/expected');
+        });
         done();
       });
   });
@@ -53,7 +61,9 @@ describe('metalsmith-markdown', function(){
       .use(md)
       .build(function(err){
         if (err) return done(err);
-        equal('test/fixtures/parser/expected', 'test/fixtures/parser/build');
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/parser/build', 'test/fixtures/parser/expected');
+        });
         done();
       });
   });
@@ -63,7 +73,9 @@ describe('metalsmith-markdown', function(){
       .use(markdown('zero').enable('emphasis'))
       .build(function(err){
         if (err) return done(err);
-        equal('test/fixtures/parser/expected', 'test/fixtures/parser/build');
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/parser/build', 'test/fixtures/parser/expected');
+        });
         done();
       });
   });
@@ -75,7 +87,9 @@ describe('metalsmith-markdown', function(){
       .use(md)
       .build(function(err){
         if (err) return done(err);
-        equal('test/fixtures/plugin/expected', 'test/fixtures/plugin/build');
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/plugin/build', 'test/fixtures/plugin/expected');
+        });
         done()
       });
   });
@@ -85,7 +99,9 @@ describe('metalsmith-markdown', function(){
       .use(markdown('default').use(require('markdown-it-abbr')))
       .build(function(err){
         if (err) return done(err);
-        equal('test/fixtures/plugin/expected', 'test/fixtures/plugin/build');
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/plugin/build', 'test/fixtures/plugin/expected');
+        });
         done();
       });
   });
@@ -120,7 +136,9 @@ describe('metalsmith-markdown', function(){
            }))
       .build(function(err){
         if (err) return done(err);
-        equal('test/fixtures/env-plugin/expected', 'test/fixtures/env-plugin/build');
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/env-plugin/build', 'test/fixtures/env-plugin/expected');
+        });
         done();
       })
   })
@@ -142,7 +160,9 @@ describe('metalsmith-markdown', function(){
       })
       .build(function(err){
         if (err) return done(err);
-        equal('test/fixtures/plugin-options/expected', 'test/fixtures/plugin-options/build');
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/plugin-options/build', 'test/fixtures/plugin-options/expected');
+        });
         done();
       });
   });
@@ -164,7 +184,57 @@ describe('metalsmith-markdown', function(){
       })
       .build(function(err){
         if (err) return done(err);
-        equal('test/fixtures/plugin-options-preset/expected', 'test/fixtures/plugin-options/build');
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/plugin-options-preset/build', 'test/fixtures/plugin-options/expected');
+        });
+        done();
+      });
+  });
+
+  it('should accept plugin options for subfields', function(done){
+    Metalsmith('test/fixtures/plugin-options-subfield')
+      .use(markdown({
+        plugin: {
+          pattern: '**/*.html',
+          fields: ['contents', 'excerpt.subfield'],
+          extension: 'htm'
+        }
+      }))
+      .use(function(files, metalsmith, done){
+        var f = files['index.htm'];
+        // concat the excerpt into the main content
+        f.contents = f.contents.toString() + '\n' + f.excerpt.subfield.toString()
+        done()
+      })
+      .build(function(err){
+        if (err) return done(err);
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/plugin-options-subfield/build', 'test/fixtures/plugin-options-subfield/expected');
+        });
+        done();
+      });
+  });
+
+  it('should accept plugin options for multiple subfields', function(done){
+    Metalsmith('test/fixtures/plugin-options-multisubfield')
+      .use(markdown({
+        plugin: {
+          pattern: '**/*.html',
+          fields: ['contents', '*.subfield'],
+          extension: 'htm'
+        }
+      }))
+      .use(function(files, metalsmith, done){
+        var f = files['index.htm'];
+        // concat the excerpt into the main content
+        f.contents = f.contents.toString() + '\n' + f.excerpt[0].subfield.toString() + f.excerpt[1].subfield.toString() +  f.main.submain.subfield.toString()
+        done()
+      })
+      .build(function(err){
+        if (err) return done(err);
+        assert.doesNotThrow(function(){
+          equal('test/fixtures/plugin-options-multisubfield/build', 'test/fixtures/plugin-options-multisubfield/expected');
+        });
         done();
       });
   });
